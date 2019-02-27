@@ -1,2 +1,3 @@
-def hoi():
-    hoi = True
+import scapy.all as scapy
+
+def scanning(ip):
