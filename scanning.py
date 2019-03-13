@@ -1,2 +1,1 @@
-def hoi():
-    hoi = True
+from scapy.all import *
