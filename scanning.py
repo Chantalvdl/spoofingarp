@@ -1,1 +1,5 @@
-from scapy.all import *
+import scapy.all as scapy
+
+
+def scanning(ip):
+    ip =
