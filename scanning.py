@@ -2,6 +2,7 @@ import scapy.all as scapy
 import time
 import argparse
 
+#python network_scanner.py -t 10.0.2.1
 
 def get_arguments():
     parser = argparse.ArgumentParser()
