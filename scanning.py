@@ -1,6 +1,6 @@
 from scapy.all import *
 
-
+# activate by typing in terminal sudo python scanning.py
 def network_scanning():
     networklist = []
     for networkname, netmaskname, ignore, interfacename, ipaddress in scapy.config.conf.route.routes:
@@ -11,17 +11,19 @@ def network_scanning():
 
         # Getting info in right format
         network = scapy.utils.ltoa(networkname)
-        netmask = long2net(netmaskname)
+        netmask = 32 - int(round(math.log(0xFFFFFFFF - netmaskname, 2)))
         net = "%s/%s" % (network, netmask)
         if netmask < 16:
-            logger.warn("%s is too big. skipping" % net)
+            #logger.warn("%s is too big. skipping" % net)
             net = 0
 
         if net:
             networklist += [net + ", " + interfacename]
 
+    print(networklist)
     return networklist
 
+network_scanning()
 
 
 
