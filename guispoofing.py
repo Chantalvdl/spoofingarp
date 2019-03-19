@@ -12,15 +12,17 @@ def scanOpenUsers():
     networkSplit = network.split(', ')
 
     ipList = scan.ip_scanning(networkSplit)
-    #victimList(ipList)
 
 
-def victimList(ipList):
-    hoi = 1
+# def button(string, i):
+#     i = 0
+#     if string == "button":
+#         return button
+#     return 0
 
 
 screen = Tk()
-
+ipList = ["none yet"]
 selectNText = Label(screen, text="Select network:")
 selectNText.grid(row=0, column=0)
 networkChoice = StringVar(screen)
@@ -28,13 +30,16 @@ networkChoice.set(scanNetworklist()[0]) # default value
 w = OptionMenu(screen, networkChoice, *scanNetworklist())
 w.grid(row=0, column=1)
 
-scanOpenButton = Button(screen, text="Scan for victims!", command=scanOpenUsers)
+scanOpenButton = Button(screen, text="Scan for victims!", command=scanOpenUsers())
 scanOpenButton.grid(row=1, column=1)
 
-check = False
-ipList = ["none yet"]
-if buttonclick:
-    ipList = scanOpenUsers
+# if button("check", 5) == 1:
+#     ipList = scanOpenUsers
+#     button(button, 0)
+#
+# elif button("check", 5) != 1:
+#     ipList = ["none yet"]
+
 
 selectIPText = Label(screen, text="Select victim:")
 selectIPText.grid(row=2, column=0)

