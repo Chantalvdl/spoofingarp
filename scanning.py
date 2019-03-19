@@ -11,7 +11,6 @@ def network_scanning():
         net = "%s/%s" % (network, netmask)
         if netmask < 16:
             print("Network is too big")
-            #logger.warn("%s is too big. skipping" % net)
             net = 0
 
         if net:
@@ -21,17 +20,16 @@ def network_scanning():
     return networklist
 
 
-def ip_scanning(net, interface, timeout=5):
-    logger.info("Using scapy arping with %s on %s" % (net, interface))
-
+def ip_scanning(networkSplit, timeout=5):
+    net = networkSplit[0]
+    interface = networkSplit[1]
     found_ips = []
     try:
         ans, unans = scapy.all.arping(net, iface=interface, timeout=timeout, verbose=True)
         for s, r in ans:
             ms = [r.src, r.psrc]
             found_ips.append(ms)
-            line = r.src + " " + r.psrc
-            logger.info(line)
+
     except socket.error as e:
         raise
 

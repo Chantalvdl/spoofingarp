@@ -2,29 +2,53 @@ from Tkinter import *
 import scanning as scan
 
 def scanNetworklist():
-    networklist = scan.network_scanning()
+    networklist= scan.network_scanning()
     return networklist
 
 
 def scanOpenUsers():
-    ipList = scan.ip_scanning()
-    return True
+    network = networkChoice.get()
+    print(network)
+    networkSplit = network.split(', ')
+
+    ipList = scan.ip_scanning(networkSplit)
+    #victimList(ipList)
 
 
-def spoofclick():
-    spoof = 1
+def victimList(ipList):
+    hoi = 1
 
 
 screen = Tk()
+
 selectNText = Label(screen, text="Select network:")
 selectNText.grid(row=0, column=0)
-variable = StringVar(screen)
-variable.set(scanNetworklist()[0]) # default value
-
-w = OptionMenu(screen, variable, *scanNetworklist())
+networkChoice = StringVar(screen)
+networkChoice.set(scanNetworklist()[0]) # default value
+w = OptionMenu(screen, networkChoice, *scanNetworklist())
 w.grid(row=0, column=1)
-scanOpenButton = Button(screen, text="Scan for victims!")
+
+scanOpenButton = Button(screen, text="Scan for victims!", command=scanOpenUsers)
 scanOpenButton.grid(row=1, column=1)
+
+check = False
+ipList = ["none yet"]
+if buttonclick:
+    ipList = scanOpenUsers
+
+selectIPText = Label(screen, text="Select victim:")
+selectIPText.grid(row=2, column=0)
+ipChoice = StringVar(screen)
+ipChoice.set(ipList[0])
+w2 = OptionMenu(screen, ipChoice, *ipList)
+w2.grid(row=2, column=1)
+
+selectRouterText = Label(screen, text="Select router:")
+selectRouterText.grid(row=3, column=0)
+routerChoice = StringVar(screen)
+routerChoice.set(ipList[0])
+w3 = OptionMenu(screen, routerChoice, *ipList)
+w3.grid(row=3, column=1)
 
 screen.mainloop()
 
