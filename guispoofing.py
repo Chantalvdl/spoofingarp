@@ -1,22 +1,21 @@
-from tkinter import *
+from Tkinter import *
+import scanning as scan
 
 def scanlist():
-    scan = 1
+    networklist = scan.network_scanning()
+    return networklist
+
 
 def spoofclick():
     spoof = 1
 
+
 screen = Tk()
+variable = StringVar(screen)
+variable.set(scanlist()[0]) # default value
 
-toprightframe = Frame(screen, bg="blue", text="2")
-bottomrightframe = Frame(screen, bg="yellow", text="3")
-topleftframe = Frame(screen, bg="red", text="1")
-bottomleftframe = Frame(screen)
-toprightframe.pack(side=TOP)
-bottomrightframe.pack(side=BOTTOM)
-topleftframe.pack(side=TOP)
-bottomleftframe.pack(side=BOTTOM)
-
+w = OptionMenu(screen, variable, *scanlist())
+w.grid(row=0, column=0)
 
 screen.mainloop()
 
