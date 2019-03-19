@@ -5,15 +5,12 @@ def network_scanning():
     networklist = []
     for networkname, netmaskname, ignore, interfacename, ipaddress in scapy.config.conf.route.routes:
 
-        # Skip standard interfaces and invalid netmasks.
-        # if network == 0 or interface == 'lo' or address == '127.0.0.1' or address == '0.0.0.0' or netmask <= 0 or netmask == 0xFFFFFFFF:
-        #     continue
-
         # Getting info in right format
         network = scapy.utils.ltoa(networkname)
         netmask = 32 - int(round(math.log(0xFFFFFFFF - netmaskname, 2)))
         net = "%s/%s" % (network, netmask)
         if netmask < 16:
+            print("Network is too big")
             #logger.warn("%s is too big. skipping" % net)
             net = 0
 
@@ -23,7 +20,11 @@ def network_scanning():
     print(networklist)
     return networklist
 
-network_scanning()
+def ip_scanning():
+    hoi =1
+
+
+
 
 
 

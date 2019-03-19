@@ -1,9 +1,14 @@
 from Tkinter import *
 import scanning as scan
 
-def scanlist():
+def scanNetworklist():
     networklist = scan.network_scanning()
     return networklist
+
+
+def scanOpenUsers():
+    ipList = scan.ip_scanning()
+    return True
 
 
 def spoofclick():
@@ -11,11 +16,15 @@ def spoofclick():
 
 
 screen = Tk()
+selectNText = Label(screen, text="Select network:")
+selectNText.grid(row=0, column=0)
 variable = StringVar(screen)
-variable.set(scanlist()[0]) # default value
+variable.set(scanNetworklist()[0]) # default value
 
-w = OptionMenu(screen, variable, *scanlist())
-w.grid(row=0, column=0)
+w = OptionMenu(screen, variable, *scanNetworklist())
+w.grid(row=0, column=1)
+scanOpenButton = Button(screen, text="Scan for victims!")
+scanOpenButton.grid(row=1, column=1)
 
 screen.mainloop()
 
