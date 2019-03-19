@@ -3,14 +3,20 @@ from scapy.all import *
 
 def network_scanning():
     networklist = []
-    for networkname, netmask, ignore, interfacename, ipaddress in scapy.config.conf.route.routes:
+    for networkname, netmaskname, ignore, interfacename, ipaddress in scapy.config.conf.route.routes:
 
         # Skip standard interfaces and invalid netmasks.
         # if network == 0 or interface == 'lo' or address == '127.0.0.1' or address == '0.0.0.0' or netmask <= 0 or netmask == 0xFFFFFFFF:
         #     continue
 
-        # Format the net/ip
-        net = format_ip(networkname, netmask)
+        # Getting info in right format
+        network = scapy.utils.ltoa(networkname)
+        netmask = long2net(netmaskname)
+        net = "%s/%s" % (network, netmask)
+        if netmask < 16:
+            logger.warn("%s is too big. skipping" % net)
+            net = 0
+
         if net:
             networklist += [net + ", " + interfacename]
 
