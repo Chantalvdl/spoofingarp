@@ -1,7 +1,27 @@
 from tkinter import *
 
+def scanlist():
+    scan = 1
+
+def spoofclick():
+    spoof = 1
 
 screen = Tk()
+
+toprightframe = Frame(screen, bg="blue", text="2")
+bottomrightframe = Frame(screen, bg="yellow", text="3")
+topleftframe = Frame(screen, bg="red", text="1")
+bottomleftframe = Frame(screen)
+toprightframe.pack(side=TOP)
+bottomrightframe.pack(side=BOTTOM)
+topleftframe.pack(side=TOP)
+bottomleftframe.pack(side=BOTTOM)
+
+
+screen.mainloop()
+
+
+# Handige aantekeningen gui tutorials
 
 # dropdown menu
 # menu = Menu(screen)
@@ -24,5 +44,3 @@ screen = Tk()
 # two.pack(fill=X)
 # three = Label(screen, text="hoi3", bg="red", fg="white")
 # three.pack(side=LEFT, fill=Y)
-
-screen.mainloop()
