@@ -12,7 +12,6 @@ def scanOpenUsers():
     print(network)
     networkSplit = network.split(', ')
     ipList = scan.ip_scanning(networkSplit)
-    print(ipList)
     return ipList
 
 
@@ -25,7 +24,7 @@ networkChoice.set(scanNetworklist()[0]) # default value
 w = OptionMenu(screen, networkChoice, *scanNetworklist())
 w.grid(row=0, column=1)
 
-scanOpenButton = Button(screen, text="Scan for victims!", command=scanOpenUsers())
+scanOpenButton = Button(screen, text="Scan for victims!", command=scanOpenUsers)
 scanOpenButton.grid(row=1, column=1)
 
 ipList = scanOpenUsers()
