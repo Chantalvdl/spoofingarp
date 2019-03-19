@@ -11,16 +11,9 @@ def scanOpenUsers():
     network = networkChoice.get()
     print(network)
     networkSplit = network.split(', ')
-
     ipList = scan.ip_scanning(networkSplit)
+    print(ipList)
     return ipList
-
-
-# def button(string, i):
-#     i = 0
-#     if string == "button":
-#         return button
-#     return 0
 
 
 screen = Tk()
@@ -39,16 +32,21 @@ ipList = scanOpenUsers()
 
 selectIPText = Label(screen, text="Select victim:")
 selectIPText.grid(row=2, column=0)
-
-w2 = t.Combobox(screen, ipList[0])
+w2 = t.Combobox(screen, values=ipList[0])
 w2.grid(row=2, column=1)
 
 selectRouterText = Label(screen, text="Select router:")
 selectRouterText.grid(row=3, column=0)
-w3 = t.Combobox(screen, ipList[0])
+w3 = t.Combobox(screen, values=ipList[0])
 w3.grid(row=3, column=1)
 
 screen.mainloop()
+
+# def button(string, i):
+#     i = 0
+#     if string == "button":
+#         return button
+#     return 0
 
 # if button("check", 5) == 1:
 #     ipList = scanOpenUsers
