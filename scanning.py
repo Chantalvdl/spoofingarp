@@ -20,8 +20,22 @@ def network_scanning():
     print(networklist)
     return networklist
 
-def ip_scanning():
-    hoi =1
+
+def ip_scanning(net, interface, timeout=5):
+    logger.info("Using scapy arping with %s on %s" % (net, interface))
+
+    found_ips = []
+    try:
+        ans, unans = scapy.all.arping(net, iface=interface, timeout=timeout, verbose=True)
+        for s, r in ans:
+            ms = [r.src, r.psrc]
+            found_ips.append(ms)
+            line = r.src + " " + r.psrc
+            logger.info(line)
+    except socket.error as e:
+        raise
+
+    return found_ips
 
 
 
