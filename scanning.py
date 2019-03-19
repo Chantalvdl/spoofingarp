@@ -2,7 +2,20 @@ from scapy.all import *
 
 
 
+def network_scanning():
+    networklist = []
+    for network, netmask, ignore, interface, address in scapy.config.conf.route.routes:
 
+        # Skip standard interfaces and invalid netmasks.
+        if network == 0 or interface == 'lo' or address == '127.0.0.1' or address == '0.0.0.0' or netmask <= 0 or netmask == 0xFFFFFFFF:
+            continue
+
+        # Format the net/ip
+        net = format_ip(network, netmask)
+        if net:
+            networklist += [net + ", " + interface]
+
+    return networklist
 
 
 
