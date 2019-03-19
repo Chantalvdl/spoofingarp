@@ -1,4 +1,5 @@
 from Tkinter import *
+import ttk as t
 import scanning as scan
 
 def scanNetworklist():
@@ -12,6 +13,7 @@ def scanOpenUsers():
     networkSplit = network.split(', ')
 
     ipList = scan.ip_scanning(networkSplit)
+    return ipList
 
 
 # def button(string, i):
@@ -33,6 +35,21 @@ w.grid(row=0, column=1)
 scanOpenButton = Button(screen, text="Scan for victims!", command=scanOpenUsers())
 scanOpenButton.grid(row=1, column=1)
 
+ipList = scanOpenUsers()
+
+selectIPText = Label(screen, text="Select victim:")
+selectIPText.grid(row=2, column=0)
+
+w2 = t.Combobox(screen, ipList[0])
+w2.grid(row=2, column=1)
+
+selectRouterText = Label(screen, text="Select router:")
+selectRouterText.grid(row=3, column=0)
+w3 = t.Combobox(screen, ipList[0])
+w3.grid(row=3, column=1)
+
+screen.mainloop()
+
 # if button("check", 5) == 1:
 #     ipList = scanOpenUsers
 #     button(button, 0)
@@ -40,23 +57,15 @@ scanOpenButton.grid(row=1, column=1)
 # elif button("check", 5) != 1:
 #     ipList = ["none yet"]
 
+# ipChoice = StringVar(screen)
+# ipChoice.set(ipList[0])
+# w2 = OptionMenu(screen, ipChoice, *ipList)
+# w2.grid(row=2, column=1)
 
-selectIPText = Label(screen, text="Select victim:")
-selectIPText.grid(row=2, column=0)
-ipChoice = StringVar(screen)
-ipChoice.set(ipList[0])
-w2 = OptionMenu(screen, ipChoice, *ipList)
-w2.grid(row=2, column=1)
-
-selectRouterText = Label(screen, text="Select router:")
-selectRouterText.grid(row=3, column=0)
-routerChoice = StringVar(screen)
-routerChoice.set(ipList[0])
-w3 = OptionMenu(screen, routerChoice, *ipList)
-w3.grid(row=3, column=1)
-
-screen.mainloop()
-
+# routerChoice = StringVar(screen)
+# routerChoice.set(ipList[0])
+# w3 = OptionMenu(screen, routerChoice, *ipList)
+# w3.grid(row=3, column=1)
 
 # Handige aantekeningen gui tutorials
 
