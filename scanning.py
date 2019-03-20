@@ -43,7 +43,7 @@ def my_mac():
 
 def restoring(ip_router, mac_router, ip_vic, mac_vic):
     send(ARP(op=2, hwdst="ff:ff:ff:ff:ff:ff", pdst=ip_router, hwsrc=mac_vic, psrc=ip_vic), count=5)
-    send(ARP(op=2, hwdst="ff:ff:ff:ff:ff:ff", pdst=target_ip, hwsrc=mac_router, psrc=ip_router), count=5)
+    send(ARP(op=2, hwdst="ff:ff:ff:ff:ff:ff", pdst=ip_vic, hwsrc=mac_router, psrc=ip_router), count=5)
     print("[*] Disabling IP forwarding")
 
 
