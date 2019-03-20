@@ -1,6 +1,7 @@
 from Tkinter import *
 import ttk as t
 import scanning as scan
+import ttk as t
 
 def scanNetworklist():
     networklist= scan.network_scanning()
@@ -15,6 +16,14 @@ def scanOpenUsers():
     return ipList
 
 
+def get_ips():
+    ipList = scanOpenUsers()
+    w2["state"] = "normal"
+    w3["state"] = "normal"
+    w2["values"] = ipList
+    w3["values"] = ipList
+
+
 screen = Tk()
 ipList = ["none yet"]
 selectNText = Label(screen, text="Select network:")
@@ -24,19 +33,17 @@ networkChoice.set(scanNetworklist()[0]) # default value
 w = OptionMenu(screen, networkChoice, *scanNetworklist())
 w.grid(row=0, column=1)
 
-scanOpenButton = Button(screen, text="Scan for victims!", command=scanOpenUsers)
+scanOpenButton = Button(screen, text="Scan for victims!", command=get_ips)
 scanOpenButton.grid(row=1, column=1)
-
-ipList = scanOpenUsers()
 
 selectIPText = Label(screen, text="Select victim:")
 selectIPText.grid(row=2, column=0)
-w2 = t.Combobox(screen, values=ipList[0])
+w2 = t.Combobox(screen, values=ipList[0], state=DISABLED)
 w2.grid(row=2, column=1)
 
 selectRouterText = Label(screen, text="Select router:")
 selectRouterText.grid(row=3, column=0)
-w3 = t.Combobox(screen, values=ipList[0])
+w3 = t.Combobox(screen, values=ipList[0], state=DISABLED)
 w3.grid(row=3, column=1)
 
 screen.mainloop()
