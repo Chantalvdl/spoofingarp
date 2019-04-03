@@ -1,6 +1,7 @@
 from Tkinter import *
 import ttk as t
 import scanning as scan
+import dns as d
 
 
 def scanNetworklist():
@@ -30,6 +31,9 @@ def spoof():
     routerMACip = router.split(', ')
     scan.arp_spoofing(routerMACip[0], routerMACip[1], victimMACip[0], victimMACip[1])
 
+def dns():
+    d.dns_spoof()
+
 screen = Tk()
 
 ipList =["non yet"]
@@ -55,6 +59,9 @@ w3.grid(row=3, column=1, columnspan=2)
 
 spoofbutton = Button(screen, text="Spoof!", command = spoof)
 spoofbutton.grid(row=4, column=1)
+
+spoofbutton = Button(screen, text="DNS!", command = dns)
+spoofbutton.grid(row=4, column=2)
 
 screen.mainloop()
 
