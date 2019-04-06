@@ -4,7 +4,7 @@ from sys import argv
 
 # DNS spoofing will make use of ARP spoofing in guispoofing.py
 
-"""
+""" kan in een losse functie gezet worden, maar eerst kijken of het zo werkt
 def alter_packet(d_pkt):
     #als dit niet werkt zet hier [0] achter
     dstIP = d_pkt.getlayer(IP).dst
@@ -19,7 +19,7 @@ def sniff_DNSpackets():
     # sniff DNS traffic one at a time
     while 1:
         DNSpkt = sniff(count=1, filter="dst port 53", iface=argv[1])
-        # if it is a DNS request, call on alter_packet
+        # if it is a DNS request, start with creating response
         if DNSpkt.haslayer(DNSQR):
             # alter_packet(DNSpkt)
             dstIP = DNSpkt.getlayer(IP).dst
