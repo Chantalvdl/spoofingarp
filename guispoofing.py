@@ -24,18 +24,20 @@ def get_ips():
     w2["values"] = ipList
     w3["values"] = ipList
 
+
 def spoof():
+    s = True
     victim = w2.get()
     router = w3.get()
     victimMACip = victim.split(', ')
     routerMACip = router.split(', ')
     # DNSspoofbutton["state"] = "normal"
-    scan.arp_spoofing(routerMACip[0], routerMACip[1], victimMACip[0], victimMACip[1])
+    scan.arp_spoofing(routerMACip[0], routerMACip[1], victimMACip[0], victimMACip[1], s)
 
 
 def dns():
-    print("hoi")
-    d.dns_spoof()
+    interface = "enp0s3"
+    d.dns_spoof(interface)
 
 
 screen = Tk()
@@ -67,6 +69,8 @@ spoofbutton.grid(row=4, column=1)
 DNSspoofbutton = Button(screen, text="DNS Spoof!", command=dns)
 DNSspoofbutton.grid(row=4, column=2)
 
+restorebutton = Button(screen, text="Restore", command=spoof)
+restorebutton.grid(row=4, column=3)
 screen.mainloop()
 
 # def button(string, i):
