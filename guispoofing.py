@@ -17,27 +17,34 @@ def scanOpenUsers():
 
 
 def get_ips():
-    ipList= scanOpenUsers()
+    ipList = scanOpenUsers()
     ipList = [', '.join(i[::-1]) for i in ipList]
     w2["state"] = "normal"
     w3["state"] = "normal"
+    e["state"] = "normal"
     w2["values"] = ipList
     w3["values"] = ipList
 
 
 def spoof():
+    number = int(e.get())
     s = True
     victim = w2.get()
     router = w3.get()
     victimMACip = victim.split(', ')
     routerMACip = router.split(', ')
-    # DNSspoofbutton["state"] = "normal"
-    scan.arp_spoofing(routerMACip[0], routerMACip[1], victimMACip[0], victimMACip[1], s)
+
+    scan.arp_spoofing(routerMACip[0], routerMACip[1], victimMACip[0], victimMACip[1], s, number)
 
 
 def dns():
     interface = "enp0s3"
     d.dns_spoof(interface)
+
+
+def prints():
+    number = e.get()
+    print(number)
 
 
 screen = Tk()
@@ -69,8 +76,12 @@ spoofbutton.grid(row=4, column=1)
 DNSspoofbutton = Button(screen, text="DNS Spoof!", command=dns)
 DNSspoofbutton.grid(row=4, column=2)
 
-restorebutton = Button(screen, text="Restore", command=spoof)
+restorebutton = Button(screen, text="Restore", command=prints)
 restorebutton.grid(row=4, column=3)
+
+e = Entry(screen, state =DISABLED)
+e.grid(row=4,column=0)
+
 screen.mainloop()
 
 # def button(string, i):

