@@ -29,10 +29,14 @@ def spoof():
     router = w3.get()
     victimMACip = victim.split(', ')
     routerMACip = router.split(', ')
+    # DNSspoofbutton["state"] = "normal"
     scan.arp_spoofing(routerMACip[0], routerMACip[1], victimMACip[0], victimMACip[1])
 
+
 def dns():
+    print("hoi")
     d.dns_spoof()
+
 
 screen = Tk()
 
@@ -57,11 +61,11 @@ selectRouterText.grid(row=3, column=0)
 w3 = t.Combobox(screen, values=ipList[0], width=50, state=DISABLED)
 w3.grid(row=3, column=1, columnspan=2)
 
-spoofbutton = Button(screen, text="Spoof!", command = spoof)
+spoofbutton = Button(screen, text="Spoof!", command=spoof)
 spoofbutton.grid(row=4, column=1)
 
-spoofbutton = Button(screen, text="DNS!", command = dns)
-spoofbutton.grid(row=4, column=2)
+DNSspoofbutton = Button(screen, text="DNS Spoof!", command=dns)
+DNSspoofbutton.grid(row=4, column=2)
 
 screen.mainloop()
 
