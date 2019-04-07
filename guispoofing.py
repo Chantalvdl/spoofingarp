@@ -2,6 +2,7 @@ from Tkinter import *
 import ttk as t
 import scanning as scan
 import dns as d
+import threading
 
 
 def scanNetworklist():
@@ -39,7 +40,9 @@ def spoof():
 
 def dns():
     interface = "enp0s3"
-    d.dns_spoof(interface)
+    dnss = threading.Thread(target=d.dns_spoof, args=(interface,))
+    dnss.start()
+    # d.dns_spoof(interface)
 
 
 def prints():
@@ -48,6 +51,7 @@ def prints():
 
 
 screen = Tk()
+screen.title("Spoofing Tool")
 
 ipList =["non yet"]
 selectNText = Label(screen, text="Select network:")
@@ -81,6 +85,7 @@ restorebutton.grid(row=4, column=3)
 
 e = Entry(screen, state =DISABLED)
 e.grid(row=4,column=0)
+
 
 screen.mainloop()
 

