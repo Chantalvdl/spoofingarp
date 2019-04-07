@@ -53,7 +53,7 @@ def sniff_DNSpackets():
 
             # send packet to victim
             send(spoof_response)
-
+        # elif: exit??
 
 
 """def return_packet():
