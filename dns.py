@@ -18,7 +18,7 @@ def alter_packet(d_pkt):
     return new_pkt
 """
 
-def sniff_DNSpackets():
+def dns_spoof():
     # sniff DNS traffic one at a time
     while 1:
         DNSpkt = sniff(count=1, filter="dst port 53", iface=argv[1])
