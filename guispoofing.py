@@ -34,11 +34,13 @@ def spoof(bool, allo):
     router = w3.get()
     victimMACip = victim.split(', ')
     routerMACip = router.split(', ')
-
+    number = 0
     if (all != "all out") and s:
         number = int(e.get())
 
-    scan.arp_spoofing(routerMACip[0], routerMACip[1], victimMACip[0], victimMACip[1], s, number, all)
+    arps = threading.Thread(target=scan.arp_spoofing, args=(routerMACip[0], routerMACip[1], victimMACip[0], victimMACip[1], s, number, all))
+    arps.start()
+    # scan.arp_spoofing(routerMACip[0], routerMACip[1], victimMACip[0], victimMACip[1], s, number, all)
 
 
 def dns(start):
@@ -84,6 +86,7 @@ spoofbutton = Button(screen, text="Spoof!", command=lambda: spoof(True, "0"))
 spoofbutton.grid(row=4, column=0)
 
 allButton = Button(screen, text="All out spoof!", command = lambda: spoof(True, "all out"))
+allButton.grid(row=5, column=0)
 
 e = Entry(screen, state =DISABLED)
 e.grid(row=4, column=1)

