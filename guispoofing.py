@@ -27,22 +27,28 @@ def get_ips():
     w3["values"] = ipList
 
 
-def spoof():
-    number = int(e.get())
-    s = True
+def spoof(bool, allo):
+    s = bool
+    all = allo
     victim = w2.get()
     router = w3.get()
     victimMACip = victim.split(', ')
     routerMACip = router.split(', ')
 
-    scan.arp_spoofing(routerMACip[0], routerMACip[1], victimMACip[0], victimMACip[1], s, number)
+    if (all != "all out") and s:
+        number = int(e.get())
+
+    scan.arp_spoofing(routerMACip[0], routerMACip[1], victimMACip[0], victimMACip[1], s, number, all)
 
 
-def dns():
+def dns(start):
     interface = "enp0s3"
-    dnss = threading.Thread(target=d.dns_spoof, args=(interface,))
-    dnss.start()
-    # d.dns_spoof(interface)
+
+    if start:
+        dnss = threading.Thread(target=d.dns_spoof, args=(interface,))
+        dnss.start()
+    elif not start:
+        d.put_q("stop")
 
 
 def prints():
@@ -67,24 +73,31 @@ scanOpenButton.grid(row=1, column=1)
 selectIPText = Label(screen, text="Select victim:")
 selectIPText.grid(row=2, column=0)
 w2 = t.Combobox(screen, values=ipList[0], width=50, state=DISABLED)
-w2.grid(row=2, column=1, columnspan=2)
+w2.grid(row=2, column=1, columnspan=4)
 
 selectRouterText = Label(screen, text="Select router:")
 selectRouterText.grid(row=3, column=0)
 w3 = t.Combobox(screen, values=ipList[0], width=50, state=DISABLED)
-w3.grid(row=3, column=1, columnspan=2)
+w3.grid(row=3, column=1, columnspan=4)
 
-spoofbutton = Button(screen, text="Spoof!", command=spoof)
-spoofbutton.grid(row=4, column=1)
+spoofbutton = Button(screen, text="Spoof!", command=lambda: spoof(True, "0"))
+spoofbutton.grid(row=4, column=0)
 
-DNSspoofbutton = Button(screen, text="DNS Spoof!", command=dns)
-DNSspoofbutton.grid(row=4, column=2)
-
-restorebutton = Button(screen, text="Restore", command=prints)
-restorebutton.grid(row=4, column=3)
+allButton = Button(screen, text="All out spoof!", command = lambda: spoof(True, "all out"))
 
 e = Entry(screen, state =DISABLED)
-e.grid(row=4,column=0)
+e.grid(row=4, column=1)
+
+restorebutton = Button(screen, text="Restore ARP", command=lambda: spoof(False, "0"))
+restorebutton.grid(row=4, column=2)
+
+DNSspoofbutton = Button(screen, text="DNS Spoof!", command=lambda: dns(True))
+DNSspoofbutton.grid(row=4, column=3)
+
+DNSstopbutton = Button(screen, text="Stop DNS", command=lambda: dns(False))
+DNSstopbutton.grid(row=4, column=4)
+
+
 
 
 screen.mainloop()

