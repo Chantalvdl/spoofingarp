@@ -47,8 +47,9 @@ def spoof(so, allo):
 
 
 def dns(start):
-    interface = "enp0s3"
-
+    network = networkChoice.get()
+    networkSplit = network.split(', ')
+    interface = networkSplit[1]
     if start:
         dnss = threading.Thread(target=d.dns_spoof, args=(interface,))
         dnss.start()

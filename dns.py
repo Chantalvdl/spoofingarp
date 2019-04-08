@@ -1,8 +1,8 @@
 from scapy.all import *
-import Queue as q
+import Queue
 
 
-que = q.Queue()
+que = Queue.Queue()
 
 
 def put_q(put):
@@ -12,9 +12,6 @@ def put_q(put):
 def get_q():
     que.get(False)
 
-# import scanning as scan
-from sys import argv
-import socket
 
 # DNS spoofing will make use of ARP spoofing
 #from scapy.layers.dns import DNSQR, UDP, DNS, DNSRR
@@ -39,12 +36,12 @@ def dns_spoof(interface):
     while 1:
         try:
             message = que.get(False)
-            if message == "stop":
+            if message == "DNS stop":
                 logger.info("Stopping DNS spoofing")
                 break
             else:
                 que.put(message)
-        except q.Empty:
+        except Queue.Empty:
             DNSpkt = scapy.all.sniff(iface=interface, count=1, filter="dst port 53")
             # if it is a DNS request, start with creating response DNSpkt[0].haslayer(scapy.all.DNSQR):
             if 1:
