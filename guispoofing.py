@@ -66,43 +66,49 @@ screen = Tk()
 screen.title("Spoofing Tool")
 
 ipList =["non yet"]
+
+scanningtext = Label(screen, text="Scanning",bg="black", fg="white", width=20)
+scanningtext.grid(row=0, column=0, columnspan=1)
 selectNText = Label(screen, text="Select network:")
-selectNText.grid(row=0, column=0)
+selectNText.grid(row=1, column=0)
 networkChoice = StringVar(screen)
 networkChoice.set(scanNetworklist()[0]) # default value
 w = OptionMenu(screen, networkChoice, *scanNetworklist())
-w.grid(row=0, column=1, columnspan=2)
+w.grid(row=1, column=1, columnspan=1)
+scanOpenButton = Button(screen, text="Scan for addresses", command=get_ips)
+scanOpenButton.grid(row=2, column=0, columnspan=2)
 
-scanOpenButton = Button(screen, text="Scan for victims!", command=get_ips)
-scanOpenButton.grid(row=1, column=1)
 
+iptext = Label(screen, text="Selecting IP adresses", bg="black", fg="white", width=20)
+iptext.grid(row=3, column=0, columnspan=1)
 selectIPText = Label(screen, text="Select victim:")
-selectIPText.grid(row=2, column=0)
+selectIPText.grid(row=4, column=0)
 w2 = t.Combobox(screen, values=ipList[0], width=50, state=DISABLED)
-w2.grid(row=2, column=1, columnspan=4)
-
+w2.grid(row=4, column=1, columnspan=1)
 selectRouterText = Label(screen, text="Select router:")
-selectRouterText.grid(row=3, column=0)
+selectRouterText.grid(row=5, column=0)
 w3 = t.Combobox(screen, values=ipList[0], width=50, state=DISABLED)
-w3.grid(row=3, column=1, columnspan=4)
+w3.grid(row=5, column=1, columnspan=1)
 
-spoofbutton = Button(screen, text="Spoof!", command=lambda: spoof(True, "0"))
-spoofbutton.grid(row=4, column=0)
-
-allButton = Button(screen, text="All out spoof!", command=lambda: spoof(True, "all out"))
-allButton.grid(row=5, column=0)
-
-e = Entry(screen, state =DISABLED)
-e.grid(row=4, column=1)
-
+arptext = Label(screen, text="Arp Spoofing", bg="black", fg="white", width=20)
+arptext.grid(row=6, column=0)
+spoofbutton = Button(screen, text="Custom Spoof!", command=lambda: spoof(True, "0"))
+spoofbutton.grid(row=7, column=0)
+allButton = Button(screen, text="All Out Spoof!", command=lambda: spoof(True, "all out"))
+allButton.grid(row=8, column=0)
+amount = Label(screen, text="(<- Amount to be sent)")
+amount.grid(row=7, column=2)
+e = Entry(screen, state=DISABLED)
+e.grid(row=7, column=1)
 restorebutton = Button(screen, text="Restore ARP", command=lambda: spoof(False, "0"))
-restorebutton.grid(row=4, column=2)
+restorebutton.grid(row=8, column=1)
 
-DNSspoofbutton = Button(screen, text="DNS Spoof!", command=lambda: dns(True))
-DNSspoofbutton.grid(row=4, column=3)
-
+dnsLabel = Label(screen, text="DNS Spoofing", bg="black", fg="white", width=20)
+dnsLabel.grid(row=9, column=0, columnspan=1)
+DNSspoofbutton = Button(screen, text="DNS Spoof!", command=lambda: dns(True), pady=5)
+DNSspoofbutton.grid(row=10, column=0)
 DNSstopbutton = Button(screen, text="Stop DNS", command=lambda: dns(False))
-DNSstopbutton.grid(row=4, column=4)
+DNSstopbutton.grid(row=10, column=1)
 
 
 screen.mainloop()
