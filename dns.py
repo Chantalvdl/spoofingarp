@@ -14,20 +14,6 @@ def get_q():
 
 
 # DNS spoofing will make use of ARP spoofing
-#from scapy.layers.dns import DNSQR, UDP, DNS, DNSRR
-#from scapy.layers.inet import IP, TCP
-
-""" kan in een losse functie gezet worden, maar eerst kijken of het zo werkt
-def alter_packet(d_pkt):
-    #als dit niet werkt zet hier [0] achter
-    dstIP = d_pkt.getlayer(IP).dst
-    srcIP = d_pkt.getlayer(IP).src
-    dstPort =
-    srcPort =
-    new_pkt = "voeg iets samen"
-    return new_pkt
-"""
-
 
 def dns_spoof(interface):
     # sniff DNS traffic one at a time
@@ -77,25 +63,6 @@ def dns_spoof(interface):
                 scapy.all.send(spoof_response)
         # elif: exit??
     sys.exit(0)
-
-"""def return_packet():
-  
-"""
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
